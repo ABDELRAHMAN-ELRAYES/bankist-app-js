@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="all.min.css" />
+
+    <link rel="icon" href="logo.png" />
+    <title>Bankist</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="welcome-word">Log in to get started</h1>
+        <img src="logo.png" alt="error" />
+        <div class="info">
+          <input type="text" class="input-user" placeholder="user" />
+          <input type="text" class="input-pin" placeholder="PIN" />
+          <i class="fa-solid fa-arrow-right-long login-btn"></i>
+        </div>
+      </div>
+      <div class="content hidden">
+        <div class="content-info">
+          <div class="header-date">
+            <h1>Current balance</h1>
+            <h2>As of 31/07/2020, 18:37</h2>
+          </div>
+          <h1 class="current-balance">26 952,59 $</h1>
+        </div>
+        <div class="inner-content">
+          <div class="movements"></div>
+          <div class="operations">
+            <div class="transfer opt">
+              <h2>Transfer money</h2>
+              <div class="inner-opt">
+                <div class="first-input">
+                  <input type="text" />
+                  <h3>Transfer to</h3>
+                </div>
+                <div class="second-input">
+                  <input type="text" />
+                  <h3>Amount</h3>
+                </div>
+                <button class="transfer-btn">
+                  <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+              </div>
+            </div>
+            <div class="loan opt">
+              <h2>Request loan</h2>
+              <div class="inner-opt">
+                <div class="first-input">
+                  <input type="text" />
+                  <h3>Amount</h3>
+                </div>
+                <button class="loan-btn">
+                  <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+              </div>
+            </div>
+            <div class="close-account opt">
+              <h2>Close account</h2>
+              <div class="inner-opt">
+                <div class="first-input">
+                  <input type="text" />
+                  <h3>Confirm user</h3>
+                </div>
+                <div class="second-input">
+                  <input type="text" />
+                  <h3>Confirm PIN</h3>
+                </div>
+                <button class="close-account-btn">
+                  <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="account-state">
+          <div class="in-div">
+            <h2>IN</h2>
+            <h1 class="in-money">28 035,20 $</h1>
+            <h2>OUT</h2>
+            <h1 class="out-money">1082,61 $</h1>
+            <h2>INTEREST</h2>
+            <h1 class="interest">335,46 $</h1>
+            <div class="sort">
+              <i class="fa-solid fa-arrow-down"></i>
+              <h2>SORT</h2>
+            </div>
+          </div>
+          <h2>
+            You will be logged out in <span class="logout-timer">09:49</span>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
