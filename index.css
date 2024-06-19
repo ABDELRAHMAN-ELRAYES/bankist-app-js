@@ -38,19 +38,21 @@ input {
   padding: 5px;
 }
 .header i {
-  font-size: 20px;
+  font-size: 15px;
+  cursor: pointer;
 }
 .hidden {
-  display: none;
+  opacity: 0;
 }
 .content {
-  width: 65%;
+  width: 51%;
   height: 80%;
   margin-top: 50px;
   margin-bottom: 50px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  transition: 1.2s;
 }
 .content-info {
   display: flex;
@@ -69,11 +71,12 @@ input {
 }
 .inner-content {
   width: 100%;
-  height: 78%;
+  height: 65%;
   margin-top: 30px;
   margin-bottom: 30px;
   display: grid;
-  grid-template-columns: 55% 42%;
+  grid-template-columns: 4fr 3fr;
+  column-gap: 20px;
   justify-content: space-between;
   border-radius: 8px;
 }
@@ -123,6 +126,8 @@ input {
 .opt {
   border-radius: 8px;
   padding: 30px;
+  display: grid;
+  align-items: center;
 }
 
 .transfer {
@@ -146,8 +151,8 @@ input {
   margin-top: 5px;
 }
 .opt input {
-  width: 170px;
-  height: 25px;
+  width: 100px;
+  height: 23px;
   border-radius: 8px;
   background: #ffffff7a;
 }

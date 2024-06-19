@@ -155,7 +155,7 @@ function loanMoney() {
   if (loanAmount.value !== '') {
     for (let movement of currentUser['movements']) {
       if (movement > 0) {
-        if (loanAmount.value <= 0.1 * movement) {
+        if (loanAmount.value * 0.1 <= movement) {
           currentUser['movements'].push(Number(loanAmount.value));
           viewMovements(currentUser['movements']);
           loanAmount.value = '';
@@ -168,20 +168,18 @@ function loanMoney() {
 loanBtn.addEventListener('click', loanMoney);
 function closeAccount() {
   if (closeUser.value !== '' && closePin.value !== '') {
-    accounts.forEach(customer => {
-      let [firstName, secondName] = customer['owner'].split(' ');
-      let username = (firstName[0] + secondName[0]).toLowerCase(); // logic error
-      if (username === closeUser.value && closePin.value === customer['pin']) {
-        // accounts.remove(customer);
-        accounts = accounts.filter(account => account !== customer);
-        console.log(accounts);
-        transferTo.value = '';
-        transferAmount.value = '';
-        // if (currentUser['owner'] === firstName + secondName) {
-        content.classList.add('hidden');
-        // }
-      }
-    });
+    let index = accounts.indexOf(currentUser);
+    let [firstName, secondName] = currentUser['owner'].split(' ');
+    let username = (firstName[0] + secondName[0]).toLowerCase();
+    if (
+      username === closeUser.value &&
+      Number(closePin.value) === currentUser['pin']
+    ) {
+      accounts.splice(index, 1);
+      closeUser.value = '';
+      closePin.value = '';
+      content.classList.add('hidden');
+    }
   }
 }
 closeBtn.addEventListener('click', closeAccount);
