@@ -57,17 +57,47 @@ let closeUser = document.querySelector('.close-user');
 let closePin = document.querySelector('.close-pin');
 let closeBtn = document.querySelector('.close-account-btn');
 
-let movementsContent = ``;
+// let movementsContent = ``;
 let depositCounter = 0,
   withdrawCounter = 0;
 let totalIncome = 0,
   totalOutcome = 0;
 let counter = 0;
 let currentUser;
+
+function createUsername(accounts) {
+  accounts.forEach(account => {
+    account.username = account.owner
+      .split(' ')
+      .map(element => element[0].toLowerCase())
+      .join('');
+  });
+}
+
+createUsername(accounts);
 function viewEachMovement(customerMovements) {
+  movements.innerHTML = '';
+  totalIncome = customerMovements
+    .filter(movement => movement > 0)
+    .reduce((acc, movement) => movement + acc, 0);
+  totalOutcome = customerMovements
+    .filter(movement => movement < 0)
+    .reduce((acc, movement) => movement + acc, 0);
   customerMovements.forEach(movement => {
+    counter = movement > 0 ? ++depositCounter : ++withdrawCounter;
     let str = movement > 0 ? 'DEPOSIT' : 'WITHDRAWAL';
-    if (movement > 0) {
+    let movementsContent = `<div class="movement">
+    <div class="type-date">
+    <p class="${str.toLocaleLowerCase()}">
+    ${counter} ${str}
+    </p>
+    <p class="movement-date">TODAY</p>
+    </div>
+    <p class="movement-amount">${movement} $</p>
+    </div>`;
+
+    movements.insertAdjacentHTML('afterbegin', movementsContent);
+    /*  if (movement > 0) {
       depositCounter++;
       counter = depositCounter;
       totalIncome += movement;
@@ -75,43 +105,45 @@ function viewEachMovement(customerMovements) {
       withdrawCounter++;
       counter = withdrawCounter;
       totalOutcome += movement;
-    }
-    movementsContent =
-      `<div class="movement">
-              <div class="type-date">
-                <p class="${str.toLocaleLowerCase()}">
-                  ${counter} ${str}
-                </p>
-                <p class="movement-date">TODAY</p>
-              </div>
-              <p class="movement-amount">${movement} $</p>
-            </div>` + movementsContent;
+      } */
+    // movementsContent =
+    //   `<div class="movement">
+    //           <div class="type-date">
+    //             <p class="${str.toLocaleLowerCase()}">
+    //               ${counter} ${str}
+    //             </p>
+    //             <p class="movement-date">TODAY</p>
+    //           </div>
+    //           <p class="movement-amount">${movement} $</p>
+    //         </div>` + movementsContent;
   });
 }
 function viewMovements(customerMovements) {
-  movementsContent = ``;
+  // movementsContent = ``;
   depositCounter = 0;
   withdrawCounter = 0;
   totalIncome = 0;
   totalOutcome = 0;
   counter = 0;
   viewEachMovement(customerMovements);
-  movements.innerHTML = movementsContent;
+  // movements.innerHTML = movementsContent;
   inMoney.textContent = totalIncome + ' $';
-  outMoney.textContent = totalOutcome * -1 + ' $';
+  outMoney.textContent = Math.abs(totalOutcome) + ' $';
   interest.textContent =
-    totalIncome * currentUser['interestRate'] - totalIncome + ' $';
-  currentBalance.textContent = totalIncome - totalOutcome + ' $';
+    customerMovements
+      .filter(mov => mov > 0)
+      .map(mov => (mov * currentUser['interestRate']) / 100)
+      .reduce((acc, mov) => acc + mov, 0) + ' $';
+  currentBalance.textContent =
+    customerMovements.reduce((acc, movement) => acc + movement, 0) + ' $';
 }
 loginBtn.addEventListener('click', () => {
   if (inputPin.value !== '' && inputUser.value !== '') {
     accounts.forEach(customer => {
-      let [firstName, secondName, thirdName] = customer['owner'].split(' ');
-      thirdName !== '';
-      let username = (firstName[0] + secondName[0]).toLowerCase();
+      let [firstName] = [...customer['owner'].split(' ')];
       if (
         customer['pin'] === Number(inputPin.value) &&
-        username === inputUser.value
+        customer.username === inputUser.value
       ) {
         currentUser = customer;
         welcomeWord.textContent = `Good Afternoon, ${firstName}!`;
@@ -138,11 +170,9 @@ sortBtn.addEventListener('click', () => {
 function transferMoney() {
   if (transferTo.value !== '' && transferAmount.value !== '') {
     accounts.forEach(customer => {
-      let [firstName, secondName] = customer['owner'].split(' ');
-      let username = (firstName[0] + secondName[0]).toLowerCase();
-      if (username === transferTo.value) {
+      if (customer.username === transferTo.value) {
         customer['movements'].push(Number(transferAmount.value));
-        currentUser['movements'].push(Number(transferAmount.value * -1));
+        currentUser['movements'].push(Number(-1 * transferAmount.value));
         viewMovements(currentUser['movements']);
         transferTo.value = '';
         transferAmount.value = '';
@@ -169,15 +199,14 @@ loanBtn.addEventListener('click', loanMoney);
 function closeAccount() {
   if (closeUser.value !== '' && closePin.value !== '') {
     let index = accounts.indexOf(currentUser);
-    let [firstName, secondName] = currentUser['owner'].split(' ');
-    let username = (firstName[0] + secondName[0]).toLowerCase();
     if (
-      username === closeUser.value &&
+      currentUser.username === closeUser.value &&
       Number(closePin.value) === currentUser['pin']
     ) {
       accounts.splice(index, 1);
       closeUser.value = '';
       closePin.value = '';
+      welcomeWord.textContent = 'Log in to get started';
       content.classList.add('hidden');
     }
   }

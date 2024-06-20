@@ -169,8 +169,7 @@ input {
 .movements {
   background-color: white;
   border-radius: 8px;
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow: scroll;
 }
 .movement {
   padding: 25px;
@@ -203,4 +202,29 @@ input {
 }
 .withdrawal {
   background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+}
+@media (max-width: 600px) {
+  .container {
+    height: fit-content;
+  }
+  .content {
+    height: fit-content;
+    justify-content: center;
+    width: 80%;
+  }
+  .inner-content {
+    display: flex;
+    flex-direction: column;
+  }
+  .opt,
+  .inner-opt,
+  .inner-opt input {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+  }
+  .movements {
+    height: 500px;
+    overflow-x: scroll;
+  }
 }
