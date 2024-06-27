@@ -45,10 +45,8 @@ input {
   opacity: 0;
 }
 .content {
-  width: 51%;
+  width: 850px;
   height: 80%;
-  margin-top: 50px;
-  margin-bottom: 50px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -203,28 +201,39 @@ input {
 .withdrawal {
   background-image: linear-gradient(to top left, #e52a5a, #ff585f);
 }
-@media (max-width: 600px) {
+@media (max-width: 844px) {
+  .header {
+    column-gap: 20px;
+  }
+  .header input {
+    margin-bottom: 20px;
+  }
   .container {
-    height: fit-content;
+    height: 1560px;
   }
   .content {
-    height: fit-content;
-    justify-content: center;
-    width: 80%;
+    display: flex;
+    width: 23rem;
+    flex-direction: column;
   }
   .inner-content {
-    display: flex;
-    flex-direction: column;
-  }
-  .opt,
-  .inner-opt,
-  .inner-opt input {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
+    width: 100%;
+    height: fit-content;
+    grid-template-columns: 100%;
   }
   .movements {
-    height: 500px;
-    overflow-x: scroll;
+    margin-bottom: 20px;
+    height: 20rem;
+  }
+  .account-state {
+    display: grid;
+    grid-template-rows: 11fr 3fr;
+  }
+  .account-state,
+  .in-div,
+  .sort {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 }
