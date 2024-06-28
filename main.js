@@ -102,14 +102,14 @@ let closeUser = document.querySelector('.close-user');
 let closePin = document.querySelector('.close-pin');
 let closeBtn = document.querySelector('.close-account-btn');
 let dateToday = document.querySelector('.today-date');
+let logoutTimer = document.querySelector('.logout-timer');
 // let movementsContent = ``;
 let depositCounter = 0,
   withdrawCounter = 0;
 let totalIncome = 0,
   totalOutcome = 0;
 let counter = 0;
-let currentUser;
-
+let currentUser, timer;
 function createUsername(accounts) {
   accounts.forEach(account => {
     account.username = account.owner
@@ -132,19 +132,20 @@ function viewEachMovement(customerMovements) {
     counter = movement > 0 ? ++depositCounter : ++withdrawCounter;
     let str = movement > 0 ? 'DEPOSIT' : 'WITHDRAWAL';
     let movDate = new Date(currentUser.movementsDates[ind]);
-    let fDate =
-      `${movDate.getDate()}`.padStart(2, '0') +
-      '/' +
-      `${movDate.getMonth() + 1}`.padStart(2, '0') +
-      '/' +
-      movDate.getFullYear();
-    let dayDate =
-      `${new Date().getDate()}`.padStart(2, '0') +
-      '/' +
-      `${new Date().getMonth() + 1}`.padStart(2, '0') +
-      '/' +
-      new Date().getFullYear();
-    console.log(fDate, dayDate);
+    // let fDate =
+    //   `${movDate.getDate()}`.padStart(2, '0') +
+    //   '/' +
+    //   `${movDate.getMonth() + 1}`.padStart(2, '0') +
+    //   '/' +
+    //   movDate.getFullYear();
+    // let dayDate =
+    //   `${new Date().getDate()}`.padStart(2, '0') +
+    //   '/' +
+    //   `${new Date().getMonth() + 1}`.padStart(2, '0') +
+    //   '/' +
+    //   new Date().getFullYear();
+    let fDate = new Intl.DateTimeFormat('en-UK').format(movDate);
+    let dayDate = new Intl.DateTimeFormat('en-UK').format(new Date());
     fDate = fDate === dayDate ? 'TODAY' : fDate;
     let movementsContent = `<div class="movement">
     <div class="type-date">
@@ -187,8 +188,8 @@ function viewMovements(customerMovements) {
   counter = 0;
   viewEachMovement(customerMovements);
   // movements.innerHTML = movementsContent;
-  let todayDate = new Date();
-  dateToday.textContent =
+  /*let todayDate = new Date();
+   dateToday.textContent =
     'As of ' +
     `${todayDate.getDate()}`.padStart('0', 2) +
     '/' +
@@ -198,7 +199,16 @@ function viewMovements(customerMovements) {
     ',' +
     `${todayDate.getHours() + 1}`.padStart(2, '0') +
     ':' +
-    `${todayDate.getMinutes() + 1}`.padStart(2, '0');
+    `${todayDate.getMinutes() + 1}`.padStart(2, '0'); */
+  dateToday.textContent =
+    'As of ' +
+    new Intl.DateTimeFormat('en-UK', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    }).format(new Date());
   inMoney.textContent = totalIncome.toFixed(2) + ' $';
   outMoney.textContent = Math.abs(totalOutcome).toFixed(2) + ' $';
   interest.textContent =
@@ -218,11 +228,16 @@ loginBtn.addEventListener('click', () => {
         acc.username === inputUser.value && acc.pin === Number(inputPin.value)
     );
     if (loginCustomer?.owner) {
+      if (timer) {
+        clearInterval(timer);
+      }
+      timer = logout();
       let [firstName] = [...loginCustomer['owner'].split(' ')];
       currentUser = loginCustomer;
       welcomeWord.textContent = `Good Afternoon, ${firstName}!`;
       viewMovements(loginCustomer['movements']);
       content.classList.remove('hidden');
+
       inputPin.value = '';
       inputUser.value = '';
     }
@@ -270,6 +285,8 @@ function transferMoney() {
       viewMovements(currentUser['movements']);
       transferTo.value = '';
       transferAmount.value = '';
+      clearInterval(timer);
+      timer = logout();
     }
     // accounts.forEach(customer => {
     //   if (customer.username === transferTo.value) {
@@ -283,6 +300,7 @@ function transferMoney() {
   }
 }
 transferBtn.addEventListener('click', transferMoney);
+
 function loanMoney() {
   if (loanAmount.value !== '') {
     if (
@@ -292,6 +310,8 @@ function loanMoney() {
       currentUser.movementsDates.push(new Date().toISOString());
       viewMovements(currentUser['movements']);
       loanAmount.value = '';
+      clearInterval(timer);
+      timer = logout();
     }
     // for (let movement of currentUser['movements']) {
     //   if (movement > 0) {
@@ -322,4 +342,22 @@ function closeAccount() {
     }
   }
 }
+
 closeBtn.addEventListener('click', closeAccount);
+let logout = function () {
+  let timerFunc = () => {
+    let minutes = String(Math.trunc(time / 60)).padStart(2, '0');
+    let seconds = String(time % 60).padStart(2, '0');
+    logoutTimer.textContent = `${minutes}:${seconds}`;
+    if (time === 0) {
+      clearInterval(timer);
+      welcomeWord.textContent = `Log in to get started`;
+      content.classList.add('hidden');
+    }
+    time--;
+  };
+  let time = 600;
+  timerFunc();
+
+  return setInterval(timerFunc, 1000);
+};
